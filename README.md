@@ -35,13 +35,15 @@ Creates a new mapping with the given internal id previously generated using /id/
 ### POST /batch
 Create a batch of mappings
 
-Request body:
+Request body format:
 
 ```json
 {
     "hash" : "entity_type"
 }
 ```
+
+Request body example: 
 
 ```json
 {
@@ -53,7 +55,7 @@ Request body:
 }
 ```
 
-Response body:
+Response body example:
 
 ```json
 {
