@@ -1,0 +1,3 @@
+node_modules
+dist
+docker/postgres_data
