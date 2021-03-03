@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "target": "es5",
+    "types": ["node"]
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}

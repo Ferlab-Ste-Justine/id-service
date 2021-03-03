@@ -1,12 +1,12 @@
 {
-  "name": "express-boilerplate",
-  "version": "0.0.1",
-  "description": "rename me",
+  "name": "id-service",
+  "version": "1.0.0",
+  "description": "ID generation and mapping service",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "tsc --project ./tsconfig.build.json",
     "dev": "ts-node ./src/server.ts",
-    "start": "node ./dist/server.js",
+    "start": "node ./dist/src/server.js",
     "prod": "npm run build && npm run start",
     "postinstall": "tsc"
   },
