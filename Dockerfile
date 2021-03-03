@@ -4,6 +4,6 @@ ADD . /code
 WORKDIR /code
 RUN npm install
 
-EXPOSE 5050
+EXPOSE 5000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "prod"]
