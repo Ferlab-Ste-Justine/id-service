@@ -7,7 +7,6 @@
     "build": "tsc --project ./tsconfig.build.json",
     "dev": "ts-node ./src/server.ts",
     "start": "node ./dist/src/server.js",
-    "prod": "npm run build && npm run start",
     "postinstall": "tsc"
   },
   "author": "",
