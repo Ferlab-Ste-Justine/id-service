@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 
 import * as pkg from '../package.json';
-import { getKeysEndingWith, getOsEnv, getOsEnvOptional, normalizePort, toNumber } from './lib/env';
+import { getKeysEndingWith, getOsEnvOptional, normalizePort, toNumber } from './lib/env';
 
 /**
  * Load .env file or for tests the .env.test file.
