@@ -26,7 +26,7 @@ export const env = {
         port: normalizePort(process.env.PORT || getOsEnvOptional('APP_PORT', '5000')),
     },
     db: {
-        database: getOsEnv('PG_DATABASE'),
+        database: getOsEnvOptional('PG_DATABASE'),
         host: getOsEnvOptional('PG_HOST'),
         port: toNumber(getOsEnvOptional('PG_PORT')),
         username: getOsEnvOptional('PG_USERNAME'),
