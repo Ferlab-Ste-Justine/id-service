@@ -21,7 +21,7 @@ export const env = {
         name: getOsEnvOptional('APP_NAME', 'Id Service'),
         version: (pkg as any).version,
         description: (pkg as any).description,
-        host: getOsEnvOptional('APP_HOST', 'localhost'),
+        host: getOsEnvOptional('APP_HOST', '0.0.0.0'),
         schema: getOsEnvOptional('APP_SCHEMA', 'http'),
         port: normalizePort(process.env.PORT || getOsEnv('APP_PORT')),
     },
