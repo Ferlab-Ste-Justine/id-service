@@ -23,7 +23,7 @@ export const env = {
         description: (pkg as any).description,
         host: getOsEnvOptional('APP_HOST', '0.0.0.0'),
         schema: getOsEnvOptional('APP_SCHEMA', 'http'),
-        port: normalizePort(process.env.PORT || getOsEnv('APP_PORT')),
+        port: normalizePort(process.env.PORT || getOsEnvOptional('APP_PORT', '5000')),
     },
     db: {
         database: getOsEnv('PG_DATABASE'),
