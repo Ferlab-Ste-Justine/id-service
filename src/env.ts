@@ -18,11 +18,11 @@ export const env = {
     isTest: process.env.NODE_ENV === 'test',
     isDevelopment: process.env.NODE_ENV === 'development',
     app: {
-        name: getOsEnv('APP_NAME'),
+        name: getOsEnvOptional('APP_NAME', 'Id Service'),
         version: (pkg as any).version,
         description: (pkg as any).description,
-        host: getOsEnv('APP_HOST'),
-        schema: getOsEnv('APP_SCHEMA'),
+        host: getOsEnvOptional('APP_HOST', 'localhost'),
+        schema: getOsEnvOptional('APP_SCHEMA', 'http'),
         port: normalizePort(process.env.PORT || getOsEnv('APP_PORT')),
     },
     db: {
