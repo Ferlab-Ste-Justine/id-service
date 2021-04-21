@@ -128,7 +128,7 @@ export async function findOrCreateMappingForGivenInternalID(
  * */
 export async function batchFindOrCreate(entityHashMap: { [hash: string]: string }): Promise<KeyValuePairs> {
     try {
-        const response: KeyValuePairs = {};
+        const response = [];
         const hashesPerEntityType: KeyValuePairs = {};
 
         for (const hash in entityHashMap) {
@@ -150,7 +150,10 @@ export async function batchFindOrCreate(entityHashMap: { [hash: string]: string 
                     hashes[i],
                     sequences[i]
                 );
-                response[hashes[i]] = idStatus.id;
+                response.push({
+                    hash: hashes[i],
+                    internal_id: idStatus.id,
+                });
             }
         }
 

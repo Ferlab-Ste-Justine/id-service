@@ -66,6 +66,7 @@ router.post('/batch', async (req, res) => {
         const response: any = await batchFindOrCreate(req.body);
         res.send(response);
     } catch (e) {
+        console.error(req.body);
         res.status(500).send(e.message);
     }
 });
