@@ -5,6 +5,9 @@ CREATE TABLE id_map (
     UNIQUE (internal_id, entity_type)
 );
 
+CREATE INDEX id_map_entity_type_hash_index
+ON id_map (entity_type, hash);
+
 CREATE SEQUENCE sample_registration_seq
     START WITH 1
     INCREMENT BY 1
