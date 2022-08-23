@@ -1,12 +1,12 @@
 export enum Status {
-    CREATED = 'CREATED',
-    FOUND = 'FOUND',
-    FAILED = 'FAILED',
+  CREATED = 'CREATED',
+  FOUND = 'FOUND',
+  FAILED = 'FAILED',
 }
 
 export interface IIdStatus {
-    status: Status;
-    id: string;
+  status: Status;
+  id: string;
 }
 
 export type IdStatus = IIdStatus;

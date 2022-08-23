@@ -1,20 +1,20 @@
-import express from 'express';
-import { Request, Response, NextFunction } from 'express';
-import * as bodyParser from 'body-parser';
-import morgan from 'morgan';
-import router from './router';
+import bodyParser from 'body-parser';
 import cors from 'cors';
+import express from 'express';
+import morgan from 'morgan';
 
-export const app = express();
+import config from './config';
+import router from './routes';
 
-// Default route
-function defaultRoute(req: Request, res: Response, next: NextFunction) {
-    res.sendStatus(404);
-}
+const PORT = config.app.port;
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('tiny'));
 app.use(cors());
 app.use('/', router);
-app.use(defaultRoute); // default route has to be last route
+
+app.listen(PORT, () => {
+  console.info(`Id Service running at ${config.app.schema}://${config.app.host}:${config.app.port}`);
+});

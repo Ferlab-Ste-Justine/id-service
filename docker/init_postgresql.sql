@@ -29,7 +29,7 @@ CREATE SEQUENCE data_access_seq
     NO MAXVALUE
     CACHE 1;
 
-CREATE SEQUENCE donor_seq
+CREATE SEQUENCE participant_seq
     START WITH 1
     INCREMENT BY 1
     MINVALUE 1
@@ -93,6 +93,13 @@ CREATE SEQUENCE family_history_seq
     CACHE 1;
 
 CREATE SEQUENCE file_seq
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    NO MAXVALUE
+    CACHE 1;
+
+CREATE SEQUENCE analysis_file_seq
     START WITH 1
     INCREMENT BY 1
     MINVALUE 1
