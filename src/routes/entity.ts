@@ -29,7 +29,6 @@ const router = express.Router();
  */
 router.get('/:entityType', async (req, res) => {
   try {
-    console.log('here');
     const response: any = await findAllMappings(req.params['entityType']);
     res.send(response);
   } catch (e: any) {
