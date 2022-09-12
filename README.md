@@ -61,8 +61,8 @@ Response body example:
 {
     "alsjf30222v20nv20vn20vn20": "ST0000001",
     "ywerwer9y8w0r98yw08ywerey": "ST0000002",
-    "ywerweraiselajglasj3421ey": "BIO0000044",
-    "n0gnd098s0f98ns098n0s9n8s": "SA0000001",
-    "bwvw98rw98ruvw98rw987v9w8": "SA0000002"
+    "ywerweraiselajglasj3421ey": "SP0000044",
+    "n0gnd098s0f98ns098n0s9n8s": "SR0000001",
+    "bwvw98rw98ruvw98rw987v9w8": "SR0000002"
 }
 ```
