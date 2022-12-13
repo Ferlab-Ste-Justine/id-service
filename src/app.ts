@@ -9,7 +9,7 @@ export const app = express();
 
 // Default route
 function defaultRoute(req: Request, res: Response, next: NextFunction) {
-    res.sendStatus(404);
+    res.sendStatus(403);
 }
 
 app.use(bodyParser.json());
