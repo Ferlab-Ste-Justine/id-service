@@ -3,16 +3,20 @@ import { pool } from '../config/postgres';
 import { IdStatus, KeyValuePairs, Status } from '../types';
 
 export async function findAllMappings(entityType: string): Promise<any> {
+  const client = await pool.connect();
   try {
-    const results = await pool.query('SELECT hash, internal_id FROM id_map WHERE entity_type = $1', [entityType]);
+    const results = await client.query('SELECT hash, internal_id FROM id_map WHERE entity_type = $1', [entityType]);
     return results.rows;
   } catch (e: any) {
     console.error(e.message);
     throw new Error(e.message);
+  } finally {
+    client.release()
   }
 }
 
 export async function generateNewId(entityType: string): Promise<string> {
+  const client = await pool.connect();
   try {
     const prefix = config.entities.prefixes[entityType].toUpperCase();
     const sequence = config.entities.sequences[entityType];
@@ -20,7 +24,7 @@ export async function generateNewId(entityType: string): Promise<string> {
     const paddingChar = config.entities.paddingCharacter[entityType];
 
     //SELECT concat('BIO', LPAD(CAST(nextval('biospecimen_seq') AS VARCHAR), 7, '0'))
-    const results = await pool.query(
+    const results = await client.query(
       `SELECT concat('${prefix}', LPAD(CAST(nextval('${sequence}') AS VARCHAR), ${padding}, '${paddingChar}'))`
     );
 
@@ -28,17 +32,20 @@ export async function generateNewId(entityType: string): Promise<string> {
   } catch (e: any) {
     console.error(e.message);
     throw new Error(e.message);
+  } finally {
+    client.release()
   }
 }
 
 export async function generateNewIdBatch(entityType: string, batchSize: number): Promise<string[]> {
+  const client = await pool.connect();
   try {
     const prefix = config.entities.prefixes[entityType].toUpperCase();
     const sequence = config.entities.sequences[entityType];
     const padding = config.entities.padding[entityType];
     const paddingChar = config.entities.paddingCharacter[entityType];
 
-    const results = await pool.query(
+    const results = await client.query(
       // eslint-disable-next-line max-len
       `SELECT concat('${prefix}', LPAD(CAST(nextval('${sequence}') AS VARCHAR), ${padding}, '${paddingChar}')) FROM generate_series(1,${batchSize})`
     );
@@ -47,12 +54,15 @@ export async function generateNewIdBatch(entityType: string, batchSize: number):
   } catch (e: any) {
     console.error(e.message);
     throw new Error(e.message);
+  } finally {
+    client.release()
   }
 }
 
 export async function findOrCreateMapping(entityType: string, hash: string): Promise<IdStatus> {
+  const client = await pool.connect();
   try {
-    const results = await pool.query('SELECT internal_id FROM id_map WHERE entity_type = $1 AND hash = $2', [
+    const results = await client.query('SELECT internal_id FROM id_map WHERE entity_type = $1 AND hash = $2', [
       entityType,
       hash,
     ]);
@@ -69,6 +79,8 @@ export async function findOrCreateMapping(entityType: string, hash: string): Pro
   } catch (e: any) {
     console.error(e.message);
     throw new Error(e.message);
+  } finally {
+    client.release()
   }
 }
 
@@ -77,8 +89,9 @@ export async function findOrCreateMappingForGivenInternalID(
   hash: string,
   internalID: string
 ): Promise<IdStatus> {
+  const client = await pool.connect();
   try {
-    let results = await pool.query('SELECT internal_id FROM id_map WHERE entity_type = $1 AND hash = $2', [
+    let results = await client.query('SELECT internal_id FROM id_map WHERE entity_type = $1 AND hash = $2', [
       entityType,
       hash,
     ]);
@@ -90,13 +103,13 @@ export async function findOrCreateMappingForGivenInternalID(
 
     if (!results.rows || results.rowCount === 0) {
       try {
-        await pool.query('INSERT INTO id_map (hash, internal_id, entity_type) VALUES ($1, $2, $3)', [
+        await client.query('INSERT INTO id_map (hash, internal_id, entity_type) VALUES ($1, $2, $3)', [
           hash,
           internalID,
           entityType,
         ]);
 
-        results = await pool.query('SELECT internal_id FROM id_map WHERE entity_type = $1 AND hash = $2', [
+        results = await client.query('SELECT internal_id FROM id_map WHERE entity_type = $1 AND hash = $2', [
           entityType,
           hash,
         ]);
@@ -119,6 +132,8 @@ export async function findOrCreateMappingForGivenInternalID(
   } catch (e: any) {
     console.error(e.message);
     throw new Error(e.message);
+  } finally {
+    client.release();
   }
 }
 

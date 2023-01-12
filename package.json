@@ -1,6 +1,6 @@
 {
   "name": "id-service",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ID generation and mapping service",
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
