@@ -1,6 +1,8 @@
 import config from '../config';
 import { pool } from '../config/postgres';
 import { IdStatus, IIdsStatus, KeyValuePairs, Row, Status } from '../types';
+import format from 'pg-format';
+import { PoolClient } from 'pg';
 
 export async function findAllMappings(entityType: string): Promise<any> {
   const client = await pool.connect();
@@ -114,53 +116,27 @@ export async function findOrCreateMappingForGivenInternalID(
 }
 
 export async function findOrCreateMapping(entityType: string, hashes: string[]): Promise<IIdsStatus> {
-  const format = require('pg-format');
   const client = await pool.connect();
 
   try {
-    console.log(`Query ${hashes.length} ids started`, new Date().toLocaleString())
+    console.debug(`Query ${hashes.length} ids started`, new Date().toLocaleString());
     let existingResult = await client.query(
       'SELECT internal_id, hash FROM id_map WHERE hash = ANY ($1) AND entity_type = $2',
       [hashes, entityType]
     );
     //Fetched already existing entries
     const existingRows: Row[] = existingResult.rows;
-    let missingRows: Row[] = []
+    let missingRows: Row[] = [];
 
     const notFoundHashes = hashes.filter((r) => !existingRows.map((s) => s.hash).includes(r));
 
     //Those not found, should be created:
     if (notFoundHashes.length > 0) {
-      const newInternalIds: string[] = await generateNewIdBatch(entityType, notFoundHashes.length);
-
-      const hashWithInternalId = notFoundHashes.map((e) => ({
-        hash: e,
-        internalId: newInternalIds[notFoundHashes.indexOf(e)],
-      }));
-
-      const values = hashWithInternalId.map((e) => [e.hash, e.internalId, entityType]);
-
-      try {
-        //Create missing entries
-        console.log(`Creating ${values.length} missing entries`, new Date().toLocaleString())
-        await client.query(format('INSERT INTO id_map (hash, internal_id, entity_type) VALUES %L', values), []);
-
-        //Fetch Missing entries
-        console.log(`Fetching ${values.length} missing entries`, new Date().toLocaleString())
-        const missingResult = await client.query(
-            'SELECT internal_id, hash FROM id_map WHERE hash = ANY ($1) AND entity_type = $2',
-            [notFoundHashes, entityType]
-        );
-
-        missingRows = missingResult.rows
-      } catch (err) {
-        console.error(`Failed to create entry for: \n\tHash: ${notFoundHashes} \n\tEntity Type: ${entityType}`);
-        console.error(err);
-      }
+      missingRows = await fetchMissing(notFoundHashes, entityType, client);
     }
 
     return {
-      status: Status.FOUND,
+      status: notFoundHashes.length == 0 ? Status.FOUND : Status.CREATED,
       rows: [...existingRows, ...missingRows],
     };
   } catch (e: any) {
@@ -168,6 +144,36 @@ export async function findOrCreateMapping(entityType: string, hashes: string[]):
     throw new Error(e.message);
   } finally {
     client.release();
+  }
+}
+
+async function fetchMissing(notFoundHashes: string[], entityType: string, client: PoolClient): Promise<Row[]> {
+  const newInternalIds: string[] = await generateNewIdBatch(entityType, notFoundHashes.length);
+
+  const hashWithInternalId = notFoundHashes.map((e) => ({
+    hash: e,
+    internalId: newInternalIds[notFoundHashes.indexOf(e)],
+  }));
+
+  const values = hashWithInternalId.map((e) => [e.hash, e.internalId, entityType]);
+
+  try {
+    //Create missing entries
+    console.debug(`Creating ${values.length} missing entries`, new Date().toLocaleString());
+    await client.query(format('INSERT INTO id_map (hash, internal_id, entity_type) VALUES %L', values), []);
+
+    //Fetch Missing entries
+    console.debug(`Fetching ${values.length} missing entries`, new Date().toLocaleString());
+    const missingResult = await client.query(
+      'SELECT internal_id, hash FROM id_map WHERE hash = ANY ($1) AND entity_type = $2',
+      [notFoundHashes, entityType]
+    );
+
+    return missingResult.rows;
+  } catch (err: any) {
+    console.error(`Failed to create entry for: \n\tHash: ${notFoundHashes} \n\tEntity Type: ${entityType}`);
+    console.error(err);
+    throw new Error(err.message);
   }
 }
 
@@ -193,7 +199,7 @@ export async function batchFindOrCreate(entityHashMap: { [hash: string]: string 
       const hashes: string[] = hashesPerEntityType[entityType];
       const idStatus: IIdsStatus = await findOrCreateMapping(entityType, hashes);
 
-      response = response.concat(...idStatus.rows)
+      response = response.concat(...idStatus.rows);
     }
 
     return response;
