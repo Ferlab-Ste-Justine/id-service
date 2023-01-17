@@ -6,7 +6,7 @@ import {
   findOrCreateMappingForGivenInternalID,
   generateNewId,
 } from '../services/idGenerationService';
-import { IdStatus, Status } from '../types';
+import {IdStatus, IIdsStatus, Status} from '../types';
 
 const router = express.Router();
 
@@ -65,10 +65,10 @@ router.get('/createId', async (req, res) => {
  *       200:
  *         description: returns Id.
  */
-router.post('/id/:hash', async (req, res) => {
+router.post('/:entityType/id/:hash', async (req, res) => {
   try {
-    const response: IdStatus = await findOrCreateMapping(req.params['entityType'], req.params['hash']);
-    res.status(Status.CREATED === response.status ? 201 : 200).send(response.id);
+    const response: IIdsStatus = await findOrCreateMapping(req.params['entityType'], [req.params['hash']]);
+    res.status(Status.CREATED === response.status ? 201 : 200).send(response.rows[0].internal_id);
   } catch (e: any) {
     res.status(500).send(e.message);
   }

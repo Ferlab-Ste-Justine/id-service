@@ -1,6 +1,6 @@
 {
   "name": "id-service",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "ID generation and mapping service",
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
@@ -20,6 +20,7 @@
     "express": "^4.17.1",
     "morgan": "^1.10.0",
     "pg": "^8.5.1",
+    "pg-format": "^1.0.4",
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0",
     "ts-node": "^10.9.1",
