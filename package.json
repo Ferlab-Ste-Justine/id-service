@@ -14,7 +14,7 @@
   "dependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.11",
-    "@types/node": "^14.14.28",
+    "@types/node": "^14.18.42",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
