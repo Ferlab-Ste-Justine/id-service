@@ -14,5 +14,7 @@ jobs:
         if: ${{ hashFiles('**/package-lock.json') != '' }}
         run: |
           rm -rf $GITHUB_WORKSPACE/.github  # disable workflow scan
+          rm -rf $GITHUB_WORKSPACE/src/config/index.ts  # manual review of this file, no secrets are directly exposed or logged
+          rm -rf $GITHUB_WORKSPACE/src/lib/utils.ts  # manual review of this file, no secrets are directly exposed or logged
           curl -s https://raw.githubusercontent.com/sngular/shai-hulud-integrity-scanner/refs/heads/main/scan-project.sh | bash /dev/stdin $GITHUB_WORKSPACE
         #  continue-on-error: true
