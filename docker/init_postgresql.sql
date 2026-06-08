@@ -112,3 +112,10 @@ CREATE SEQUENCE analysis_file_seq
     MINVALUE 1
     NO MAXVALUE
     CACHE 1;
+
+CREATE SEQUENCE file_hash_seq
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    NO MAXVALUE
+    CACHE 1;

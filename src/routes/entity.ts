@@ -6,7 +6,7 @@ import {
   findOrCreateMappingForGivenInternalID,
   generateNewId,
 } from '../services/idGenerationService';
-import {IdStatus, IIdsStatus, Status} from '../types';
+import { IdStatus, IIdsStatus, Status } from '../types';
 
 const router = express.Router();
 
