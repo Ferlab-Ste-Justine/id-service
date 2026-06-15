@@ -2,7 +2,7 @@ FROM node:14.4.0-alpine as build
 
 ADD . /code
 WORKDIR /code
-RUN npm install
+RUN npm ci
 RUN npm run build
 
 FROM node:14.4.0-alpine as runtime
