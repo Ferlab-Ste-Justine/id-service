@@ -81,11 +81,10 @@ export async function findOrCreateMappingForGivenInternalID(
     //Those not found should be created here:
     if (!results.rows || results.rowCount === 0) {
       try {
-        await client.query('INSERT INTO id_map (hash, internal_id, entity_type) VALUES ($1, $2, $3)', [
-          hash,
-          internalID,
-          entityType,
-        ]);
+        await client.query(
+          'INSERT INTO id_map (hash, internal_id, entity_type) VALUES ($1, $2, $3) ON CONFLICT (hash, entity_type) DO NOTHING',
+          [hash, internalID, entityType]
+        );
 
         results = await client.query('SELECT internal_id FROM id_map WHERE entity_type = $1 AND hash = $2', [
           entityType,
@@ -160,7 +159,10 @@ async function fetchMissing(notFoundHashes: string[], entityType: string, client
   try {
     //Create missing entries
     console.debug(`Creating ${values.length} missing entries`, new Date().toLocaleString());
-    await client.query(format('INSERT INTO id_map (hash, internal_id, entity_type) VALUES %L', values), []);
+    await client.query(
+      format('INSERT INTO id_map (hash, internal_id, entity_type) VALUES %L ON CONFLICT (hash, entity_type) DO NOTHING', values),
+      []
+    );
 
     //Fetch Missing entries
     console.debug(`Fetching ${values.length} missing entries`, new Date().toLocaleString());
