@@ -1,7 +1,8 @@
 CREATE TABLE id_map (
-    hash varchar(255) PRIMARY KEY,
+    hash varchar(255) NOT NULL,
     internal_id varchar(50) NOT NULL,
-    entity_type varchar(50),
+    entity_type varchar(50) NOT NULL,
+    PRIMARY KEY (hash, entity_type),
     UNIQUE (internal_id, entity_type)
 );
 
